@@ -6,14 +6,16 @@ import {
 } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { MatDialog } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { Router } from "@angular/router";
 import {
-    catchError, finalize, tap, throwError
+    catchError, tap, throwError
 } from "rxjs";
 
 import { ApiService } from "../../services/api.service";
+import { CreateUserDialogComponent } from "../dialogs/create-user-dialog/create-user-dialog.component";
 
 @Component({
     selector: "app-login",
@@ -32,7 +34,7 @@ export class LoginComponent {
     form: FormGroup;
     token = signal<string | null>(null);
 
-    constructor(private fb: FormBuilder, private router: Router) {
+    constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog) {
         this.form = this.fb.group({
             email: ["", [Validators.required, Validators.email]],
         });
@@ -49,13 +51,30 @@ export class LoginComponent {
                 localStorage.setItem("jwt", data.token);
             }),
             catchError((err: any) => {
-                console.error("Error consola", err);
-
                 this.form.get("email")?.setErrors({ email: "Usuario no encontrado" });
+
+                if (err.status === 404) {
+                    const dialogRef = this.dialog.open(CreateUserDialogComponent);
+
+                    dialogRef.afterClosed().subscribe((result) => {
+                        if (result) {
+                            this.apiService.createUser(email).subscribe({
+                                next: () => {
+                                    const emailControl = this.form.get("email");
+                                    emailControl?.setErrors(null);
+                                    emailControl?.markAsPristine();
+                                    emailControl?.markAsUntouched();
+
+                                    this.login();
+                                },
+                                error: (e) => console.error("Error al crear usuario", e)
+                            });
+                        }
+                    });
+                } else {
+                    console.error("Otro error", err);
+                }
                 return throwError(() => err);
-            }),
-            finalize(() => {
-            // You can add a callback here if you need to perform some action when the observable completes
             })
         ).subscribe();
     }

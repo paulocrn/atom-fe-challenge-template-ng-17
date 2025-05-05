@@ -7,6 +7,7 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
+import { Router } from "@angular/router";
 
 import { ApiService } from "../../services/api.service";
 import { Todo } from "../../services/todo.service";
@@ -35,8 +36,10 @@ export class TodoListComponent {
 
     apiService = inject(ApiService);
 
-    constructor(private dialog: MatDialog, private addTaskDialog: MatDialog) {
+    constructor(private dialog: MatDialog, private addTaskDialog: MatDialog, private router: Router) {
         this.refreshTasks();
+
+        console.log("info:", this.todosbycategory());
     }
 
     onTaskAdded(newTask: { titulo: string; descripcion: string }) {
@@ -45,7 +48,12 @@ export class TodoListComponent {
 
     categorizedTasks() {
         this.todosbycategory.set(this.todos.reduce((acc: { [key: string]: any }, task) => {
-            const category = task.categoria || "Otros";
+            let category = task.categoria || "Otros";
+
+            if (task.completed) {
+                category = "Completadas";
+            }
+
             if (!acc[category]) {
                 acc[category] = [];
             }
@@ -61,7 +69,7 @@ export class TodoListComponent {
         });
     }
 
-    addTodo(task: { titulo: string; descripcion: string }) {
+    addTodo(task: { titulo: string; descripcion: string; categoria?: string }) {
         const token = localStorage.getItem("jwt") || "";
 
         this.apiService.addTask(task, token).subscribe(() => {
@@ -102,14 +110,23 @@ export class TodoListComponent {
         });
     }
 
-    openTaskDialog(categoria: string): void {
+    openTaskDialog(categoria?: string): void {
+        const isNewCategory = !categoria;
+
         const dialogRef = this.addTaskDialog.open(AddTaskDialogComponent, {
+            data: { categoria: categoria || "Otros", mostrarCategoria: isNewCategory },
             width: "450px"
         });
 
         dialogRef.afterClosed().subscribe((result) => {
+            const { tmpCategoria } = categoria || result.categoria;
+            console.log("result", tmpCategoria, result, categoria);
+            if (result === true || result === undefined) return;
             if (result !== true) {
-                this.addTodo({ ...result, categoria });
+                if (result.titulo === "" || result.descripcion === "") {
+                    return;
+                }
+                this.addTodo({ ...result, tmpCategoria });
             }
         });
     }
@@ -124,4 +141,9 @@ export class TodoListComponent {
 
         return `${formattedDate} ${formattedTime}`;
     };
+
+    logout() {
+        localStorage.removeItem("jwt");
+        this.router.navigate(["/login"]);
+    }
 }

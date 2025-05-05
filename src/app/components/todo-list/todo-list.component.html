@@ -2,8 +2,11 @@
     <div class="board-header">
       <h2>Lista de Tareas</h2>
       <span class="spacer"></span>
-      <button mat-stroked-button color="accent">
+      <button mat-stroked-button color="accent" (click)="openTaskDialog()">
         <mat-icon>add</mat-icon> Agregar Categoría
+      </button>
+      <button mat-stroked-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon> Cerrar sesión
       </button>
     </div>
   

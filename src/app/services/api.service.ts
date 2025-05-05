@@ -11,7 +11,8 @@ import { Todo } from "./todo.service";
     providedIn: "root"
 })
 export class ApiService {
-    private apiUrl = "https://tasks-api-nl0o.onrender.com/api";
+    // private apiUrl = "https://tasks-api-nl0o.onrender.com/api";
+    private apiUrl = "http://localhost:3000/api";
 
     constructor(private http: HttpClient) {
         /* if (process.env["NODE_ENV"] === "production") {
@@ -37,6 +38,12 @@ export class ApiService {
 
     addTask(task: { titulo: string; descripcion: string }, token: string): Observable<Todo> {
         return this.http.post<Todo>(`${this.apiUrl}/tasks`, task, { headers: ApiService.getAuthHeaders(token) });
+    }
+
+    createUser(email: string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/users`, { email }, {
+            headers: ApiService.getAuthHeaders()
+        });
     }
 
     login(email: string): Observable<any> {

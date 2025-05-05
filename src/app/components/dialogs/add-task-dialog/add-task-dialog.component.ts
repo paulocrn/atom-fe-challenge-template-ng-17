@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import {
     FormBuilder, FormGroup, ReactiveFormsModule, Validators
 } from "@angular/forms";
-import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 
@@ -17,10 +17,18 @@ import { MatSelectModule } from "@angular/material/select";
 export class AddTaskDialogComponent {
     form: FormGroup;
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<AddTaskDialogComponent>) {
+    // @Inject(MAT_DIALOG_DATA) public data: any;
+
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private fb: FormBuilder,
+        private dialogRef: MatDialogRef<AddTaskDialogComponent>
+    ) {
         this.form = this.fb.group({
             titulo: ["", [Validators.required]],
             descripcion: ["", [Validators.required]],
+            categoria: [this.data?.categoria || "", this.data?.mostrarCategoria ? Validators.required : []]
+
         });
     }
 
@@ -31,7 +39,8 @@ export class AddTaskDialogComponent {
     saveTask(): void {
         const { titulo } = this.form.value;
         const { descripcion } = this.form.value;
+        const { categoria } = this.form.value || "";
 
-        this.dialogRef.close({ titulo, descripcion });
+        this.dialogRef.close({ titulo, descripcion, categoria });
     }
 }
