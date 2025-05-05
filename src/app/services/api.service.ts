@@ -1,16 +1,23 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import dotenv from "dotenv";
 import { Observable } from "rxjs";
 
 import { Todo } from "./todo.service";
+
+dotenv.config();
 
 @Injectable({
     providedIn: "root"
 })
 export class ApiService {
-    private apiUrl = "http://localhost:3000/api";
+    // private apiUrl = "http://localhost:3000/api";
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private apiUrl: string) {
+        if (process.env["NODE_ENV"] === "production") {
+            this.apiUrl = process.env["API_URL"] || "http://localhost:3000/api";
+        }
+    }
 
     private static getAuthHeaders(token?: string): HttpHeaders {
         const jwt = token || localStorage.getItem("jwt") || "";
