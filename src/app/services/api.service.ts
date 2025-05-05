@@ -15,8 +15,11 @@ export class ApiService {
 
     constructor(private http: HttpClient, private apiUrl: string) {
         if (process.env["NODE_ENV"] === "production") {
-            this.apiUrl = process.env["API_URL"] || "http://localhost:3000/api";
+            this.apiUrl = "https://tasks-api-nl0o.onrender.com/api";
+        } else {
+            this.apiUrl = "http://localhost:3000/api";
         }
+        this.apiUrl = "https://tasks-api-nl0o.onrender.com/api";
     }
 
     private static getAuthHeaders(token?: string): HttpHeaders {
