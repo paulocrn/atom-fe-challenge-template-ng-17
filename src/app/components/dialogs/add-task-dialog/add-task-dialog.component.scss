@@ -1,0 +1,81 @@
+$form-accent-color: #0a66c2;
+$form-gradient: linear-gradient(90deg, #0f73ee, #00c8ff);
+$form-gradient-cancel: linear-gradient(90deg, #ee430f, #ff4800);
+$field-border-color: #e0e0e0;
+
+.form-title {
+  font-size: 24px;
+  color: $form-accent-color;
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 10px;
+}
+
+.custom-field {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+
+  ::ng-deep .mat-form-field-outline {
+    border-color: $field-border-color;
+    border-radius: 12px;
+  }
+
+  ::ng-deep .mat-form-field-outline-thick {
+    border-width: 1.5px;
+  }
+
+  ::ng-deep .mat-form-field-flex {
+    background-color: white;
+    border-radius: 12px;
+  }
+
+  ::ng-deep .mat-form-field-label {
+    color: #888;
+  }
+
+  ::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+    color: $form-accent-color !important;
+  }
+}
+
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit-button {
+  background: $form-gradient;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: none;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+}
+
+.cancel-button {
+    background: $form-gradient-cancel;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: none;
+  
+    &:hover {
+      filter: brightness(1.2);
+    }
+}

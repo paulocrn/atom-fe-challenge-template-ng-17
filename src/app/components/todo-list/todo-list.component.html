@@ -1,0 +1,53 @@
+<div class="board-container">
+    <div class="board-header">
+      <h2>Lista de Tareas</h2>
+      <span class="spacer"></span>
+      <button mat-stroked-button color="accent">
+        <mat-icon>add</mat-icon> Agregar Categoría
+      </button>
+    </div>
+  
+    <div class="board-columns">
+      <div class="column" *ngFor="let column of todosbycategory() | keyvalue">
+        <div class="column-header" [ngStyle]="{ 'border-top': '4px solid #b39ddb' }">
+          <h3><mat-icon aria-hidden="false" aria-label="Icono de tareas" class="inline">task</mat-icon> {{ column.key }}</h3>
+        </div>
+  
+        <div class="task-card" *ngFor="let task of column.value" [ngStyle]="{ 'border-left': '4px solid #b39ddb' }">
+          <div class="task-header">
+            <mat-icon class="task-icon">assignment turned in</mat-icon>
+            <div class="task-title">{{ task.titulo }}</div>
+            <span class="spacer"></span>
+            <button mat-icon-button color="warn" (click)="deleteTask(task)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+  
+          <div class="task-details">
+            <p>{{ task.descripcion }}</p>
+            <br />
+            <small><mat-icon inline>event</mat-icon>{{ this.formatFecha(task.createdAt) }}</small>
+          </div>
+  
+          <div class="task-footer">
+            <div class="icons">
+              <mat-icon class="icon" [ngClass]="task.completed ? 'complete' : 'incomplete'" (click)="toggleCompletion(task)">
+                {{ task.completed ? 'check_circle' : 'check_circle_outline' }}
+              </mat-icon>
+            </div>
+            <div class="avatars">
+              <mat-icon class="avatar">account_circle</mat-icon>
+            </div>
+          </div>
+        </div>
+  
+        <div class="add-task">
+            <button mat-button color="primary" (click)="openTaskDialog(column.key)">
+              <mat-icon>add</mat-icon> Agregar Tarea
+            </button>
+        </div>
+          
+      </div>
+    </div>
+</div>
+  

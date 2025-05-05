@@ -1,0 +1,22 @@
+<h2 mat-dialog-title class="form-title">Registrar Nueva Tarea</h2>
+
+<div mat-dialog-content>
+    <form class="task-form" (ngSubmit)="saveTask()" [formGroup]="form">
+        <mat-form-field appearance="outline" class="custom-field">
+        <mat-label>Título</mat-label>
+        <input matInput formControlName="titulo" placeholder="Ingrese el título de la tarea">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="custom-field">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="descripcion" placeholder="Ingrese detalles sobre la tarea"></textarea>
+        </mat-form-field>
+
+        <div mat-dialog-actions align="end" class="form-actions">
+            <button mat-button class="cancel-button" (click)="closeDialog()">Cancelar</button>
+            <button mat-raised-button color="primary" class="submit-button" [disabled]="form.invalid">Guardar</button>
+        </div>
+  </form>
+</div>
+
+
